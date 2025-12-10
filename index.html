@@ -1,0 +1,435 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Is It a Christmas Movie? – Dan's Rubric 2.0</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    :root {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.5;
+      color: #1f2933;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      background: radial-gradient(circle at top, #fef3e2 0, #fdf2f8 40%, #e0f2f1 100%);
+    }
+    .app {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 1.5rem;
+    }
+    .card {
+      background: rgba(255, 255, 255, 0.96);
+      border-radius: 18px;
+      padding: 1.75rem;
+      box-shadow: 0 18px 45px rgba(0,0,0,0.08);
+      margin-bottom: 1.5rem;
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(6px);
+    }
+    .header {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .title-block {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .wreath {
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #fefce8 0, #bbf7d0 15%, #166534 60%, #052e16 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 25px rgba(22, 101, 52, 0.4);
+      position: relative;
+    }
+    .wreath::after {
+      content: "";
+      position: absolute;
+      width: 26px;
+      height: 10px;
+      bottom: -5px;
+      border-radius: 999px;
+      background: #b91c1c;
+      box-shadow: 0 0 0 2px rgba(248, 250, 252, 0.9);
+    }
+    .wreath span {
+      font-size: 1.6rem;
+    }
+    h1 {
+      margin: 0;
+      font-size: 1.8rem;
+      letter-spacing: 0.01em;
+    }
+    .subtitle {
+      margin-top: 0.15rem;
+      font-size: 0.95rem;
+      color: #4b5563;
+    }
+    .chip {
+      padding: 0.25rem 0.7rem;
+      border-radius: 999px;
+      background: rgba(22, 163, 74, 0.08);
+      border: 1px solid rgba(22, 163, 74, 0.35);
+      font-size: 0.8rem;
+      color: #14532d;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      white-space: nowrap;
+    }
+    .chip span {
+      font-size: 1rem;
+    }
+    .movie-input {
+      margin-bottom: 1rem;
+    }
+    label {
+      font-weight: 600;
+      display: block;
+      margin-bottom: 0.25rem;
+    }
+    input[type="text"], select {
+      width: 100%;
+      padding: 0.55rem 0.65rem;
+      border-radius: 10px;
+      border: 1px solid #d4d4d8;
+      font-size: 0.95rem;
+      background: #f9fafb;
+    }
+    input[type="text"]:focus,
+    select:focus {
+      outline: none;
+      border-color: #16a34a;
+      box-shadow: 0 0 0 1px rgba(22, 163, 74, 0.5);
+      background: #ffffff;
+    }
+    .question {
+      margin-bottom: 1.15rem;
+      padding: 0.8rem 0 1rem;
+      border-bottom: 1px dashed #e5e7eb;
+    }
+    .question:last-of-type {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+    h2 {
+      font-size: 1.05rem;
+      margin: 0 0 0.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    h2 span.qnum {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #b91c1c;
+      background: #fee2e2;
+      border-radius: 999px;
+      padding: 0.08rem 0.5rem;
+    }
+    .helper {
+      font-size: 0.82rem;
+      color: #6b7280;
+      margin-bottom: 0.35rem;
+    }
+    button {
+      border: none;
+      border-radius: 999px;
+      padding: 0.65rem 1.5rem;
+      font-size: 0.98rem;
+      cursor: pointer;
+      background: linear-gradient(135deg, #15803d, #b91c1c);
+      color: white;
+      font-weight: 600;
+      box-shadow: 0 10px 25px rgba(185, 28, 28, 0.45);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-top: 0.5rem;
+    }
+    button:hover {
+      filter: brightness(1.04);
+    }
+    button:active {
+      transform: translateY(1px);
+      box-shadow: 0 4px 12px rgba(185, 28, 28, 0.35);
+    }
+    .result {
+      margin-top: 1.25rem;
+      padding: 1.1rem 1.2rem;
+      border-radius: 14px;
+      background: #fefce8;
+      border: 1px solid #facc15;
+    }
+    .result-title {
+      font-weight: 700;
+      margin-bottom: 0.3rem;
+    }
+    .badge {
+      display: inline-block;
+      padding: 0.18rem 0.7rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-left: 0.25rem;
+    }
+    .badge-full {
+      background: #166534;
+      color: #fff;
+    }
+    .badge-adjacent {
+      background: #1d4ed8;
+      color: #fff;
+    }
+    .badge-debatable {
+      background: #b45309;
+      color: #fff;
+    }
+    .badge-not {
+      background: #4b5563;
+      color: #fff;
+    }
+    .score {
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin-top: 0.15rem;
+    }
+    .classificationText {
+      margin-top: 0.15rem;
+      font-size: 0.92rem;
+    }
+    .rubric-notes {
+      font-size: 0.8rem;
+      color: #6b7280;
+      margin-top: 0.7rem;
+    }
+    details {
+      margin-top: 0.6rem;
+    }
+    summary {
+      cursor: pointer;
+      font-size: 0.85rem;
+      color: #374151;
+      font-weight: 600;
+    }
+    summary::marker {
+      color: #b91c1c;
+    }
+    .rubric-mini {
+      margin-top: 0.35rem;
+      font-size: 0.8rem;
+      color: #6b7280;
+    }
+    .rubric-mini strong {
+      color: #374151;
+    }
+    .footer {
+      font-size: 0.78rem;
+      color: #6b7280;
+      text-align: center;
+      margin-top: 0.25rem;
+      padding-bottom: 1rem;
+    }
+    .footer span {
+      color: #b91c1c;
+    }
+
+    @media (max-width: 640px) {
+      .card {
+        padding: 1.25rem;
+      }
+      h1 {
+        font-size: 1.4rem;
+      }
+      .wreath {
+        width: 46px;
+        height: 46px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="card">
+      <div class="header">
+        <div class="title-block">
+          <div class="wreath">
+            <span>🎄</span>
+          </div>
+          <div>
+            <h1>Is It a Christmas Movie?</h1>
+            <div class="subtitle">Score any film using Dan's Christmas Movie Classification Rubric 2.0.</div>
+          </div>
+        </div>
+        <div class="chip">
+          <span>⭐</span>
+          Dan's Rubric 2.0
+        </div>
+      </div>
+      <p style="margin-top:1rem;font-size:0.95rem;">
+        Answer five quick questions about a movie’s setting, themes, viewing tradition, Christmas mythology, and emotional tone.
+        Then hit <strong>“Score This Movie”</strong> to see whether it qualifies as a Full Christmas Movie, Christmas-Adjacent, Seasonally Debatable, or Not a Christmas Movie.
+      </p>
+    </div>
+
+    <div class="card">
+      <div class="movie-input">
+        <label for="movieTitle">Movie title</label>
+        <input type="text" id="movieTitle" placeholder="e.g., Elf, White Christmas, Die Hard">
+      </div>
+
+      <div class="question">
+        <h2><span class="qnum">Q1</span> Seasonal Setting & Plot Relevance (0–3 pts)</h2>
+        <p class="helper">Does the story meaningfully rely on the Christmas season as its setting?</p>
+        <select id="q1">
+          <option value="0">0 – Christmas is irrelevant to the story</option>
+          <option value="2">2 – Some Christmas scenes, but the setting is easily swappable</option>
+          <option value="3">3 – The story meaningfully relies on the Christmas season</option>
+        </select>
+      </div>
+
+      <div class="question">
+        <h2><span class="qnum">Q2</span> Christmas-Thematic Content (0–4 pts)</h2>
+        <p class="helper">How central are Christmas themes (generosity, reconciliation, hope, incarnation, etc.) to the movie?</p>
+        <select id="q2">
+          <option value="0">0 – No connection to Christmas themes</option>
+          <option value="2">2 – Minor or background Christmas themes</option>
+          <option value="4">4 – Christmas themes are central and directly tied to the story</option>
+        </select>
+      </div>
+
+      <div class="question">
+        <h2><span class="qnum">Q3</span> Viewing Tradition (0–2 pts)</h2>
+        <p class="helper">Is this something you (or the broader culture) mainly watch at Christmas?</p>
+        <select id="q3">
+          <option value="0">0 – Not season-specific</option>
+          <option value="1">1 – Sometimes watched at Christmas</option>
+          <option value="2">2 – Primarily or exclusively watched at Christmas</option>
+        </select>
+      </div>
+
+      <div class="question">
+        <h2><span class="qnum">Q4</span> Christmas Mythology / Christmas-Specific Magic (0–5 pts)</h2>
+        <p class="helper">
+          We’re talking about actual <em>Christmas</em> mythos: Santa, elves, North Pole, the Grinch, explicit Christmas miracles or magic
+          that exist because it is Christmas. General angels or non-Christmas miracles don’t count here.
+        </p>
+        <select id="q4">
+          <option value="0">0 – No Christmas-specific magic or mythology</option>
+          <option value="2">2 – Christmas aesthetic only (decor, Santa suit, pageant, office party)</option>
+          <option value="4">4 – Implied Christmas magic or mythic influence</option>
+          <option value="5">5 – Literal Christmas mythic beings or explicit Christmas magic</option>
+        </select>
+      </div>
+
+      <div class="question">
+        <h2><span class="qnum">Q5</span> Christmas Emotional Tone (0–1 pt)</h2>
+        <p class="helper">Does it feel warm, nostalgic, cozy, “Christmas-y” in tone?</p>
+        <select id="q5">
+          <option value="0">0 – No distinct Christmas emotional tone</option>
+          <option value="1">1 – Clear warm / nostalgic / cozy Christmas tone</option>
+        </select>
+      </div>
+
+      <button type="button" onclick="calculateScore()">
+        🎬 Score This Movie
+      </button>
+
+      <div id="result" class="result" style="display:none;">
+        <div class="result-title" id="resultTitle"></div>
+        <div class="score" id="scoreText"></div>
+        <div id="classificationText" class="classificationText"></div>
+        <div class="rubric-notes">
+          <strong>Scoring brackets:</strong><br>
+          15+ = Full Christmas Movie • 10–14 = Christmas-Adjacent • 1–6 = Seasonally Debatable • 0 = Not a Christmas Movie
+        </div>
+        <details>
+          <summary>Show rubric details</summary>
+          <div class="rubric-mini">
+            <p><strong>Q1 – Seasonal Setting:</strong> How tied the story is to the Christmas season.</p>
+            <p><strong>Q2 – Christmas Themes:</strong> Generosity, reconciliation, incarnation, hope, etc., as Christmas-specific.</p>
+            <p><strong>Q3 – Viewing Tradition:</strong> How strongly it’s culturally or personally anchored to Christmas viewing.</p>
+            <p><strong>Q4 – Christmas Mythos:</strong> Only Christmas-specific magic (Santa, elves, Grinch, explicit Christmas miracles).</p>
+            <p><strong>Q5 – Emotional Tone:</strong> The “cozy Christmas” vibe — or lack thereof.</p>
+          </div>
+        </details>
+      </div>
+    </div>
+
+    <div class="footer">
+      Based on <span>Dan's Christmas Movie Classification Rubric 2.0</span> • Use responsibly; holiday arguments may increase.
+    </div>
+  </div>
+
+  <script>
+    function classify(score) {
+      if (score >= 15) {
+        return {
+          label: "Full Christmas Movie",
+          description: "This one is undeniably, unequivocally a Christmas Movie. It belongs in the core holiday canon.",
+          badgeClass: "badge-full"
+        };
+      } else if (score >= 10) {
+        return {
+          label: "Christmas-Adjacent",
+          description: "Strong Christmas ties, but it orbits just outside the true Christmas core. Festive, but not definitive.",
+          badgeClass: "badge-adjacent"
+        };
+      } else if (score >= 1) {
+        return {
+          label: "Seasonally Debatable",
+          description: "Contains holiday elements, but calling it a Christmas Movie is definitely a conversation starter.",
+          badgeClass: "badge-debatable"
+        };
+      } else {
+        return {
+          label: "Not a Christmas Movie",
+          description: "May be beloved, but it doesn’t qualify as a Christmas Movie by this rubric. Enjoy it year-round.",
+          badgeClass: "badge-not"
+        };
+      }
+    }
+
+    function calculateScore() {
+      const movieTitle = document.getElementById('movieTitle').value.trim() || "This movie";
+      const q1 = parseInt(document.getElementById('q1').value, 10);
+      const q2 = parseInt(document.getElementById('q2').value, 10);
+      const q3 = parseInt(document.getElementById('q3').value, 10);
+      const q4 = parseInt(document.getElementById('q4').value, 10);
+      const q5 = parseInt(document.getElementById('q5').value, 10);
+
+      const total = q1 + q2 + q3 + q4 + q5;
+      const classification = classify(total);
+
+      const resultEl = document.getElementById('result');
+      const titleEl = document.getElementById('resultTitle');
+      const scoreTextEl = document.getElementById('scoreText');
+      const classTextEl = document.getElementById('classificationText');
+
+      titleEl.innerHTML = movieTitle +
+        ' is classified as: <span class="badge ' + classification.badgeClass + '">' + classification.label + '</span>';
+      scoreTextEl.textContent = 'Total Score: ' + total + ' points';
+      classTextEl.textContent = classification.description;
+
+      resultEl.style.display = 'block';
+      resultEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  </script>
+</body>
+</html>
